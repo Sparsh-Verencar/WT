@@ -1,0 +1,50 @@
+body{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(74, 5, 18);
+    
+}
+
+form{
+    background-color: rgb(106, 64, 12);
+    width: 25vw;
+    height: 50vh;
+    padding: 2%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    border-radius: 10%;
+    gap: 1vh;
+}
+
+form header{
+    font-size: 3rem;
+}
+
+#input-group{
+    width: 100%;
+    font-size: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#input-group input{
+    font-size: 1.5rem;
+}
+
+
+#signup-button button{
+   font-size: large;
+   padding: 5%;
+   border-radius: 5%;
+}

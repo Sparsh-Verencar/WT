@@ -3,9 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-</head>
+    <title>Create Account</title>
+</head><!DOCTYPE html>
+<html lang="en">
 <body>
-    <h1>create account</h1>
+    <form>
+        <header>Create Account</header>
+        <section id="input-group">
+            <label for="username">Username</label>
+            <input type="text" name="username">
+            <br>
+            <label for="email">Email</label>
+            <input type="email" name="email">
+            <br>
+            <label for="password">Password</label>
+            <input type="password" name="password">
+            <br>
+        </section>
+        <section id="signup-button">
+            <button>Create Account</button>
+        </section>
+    </form>
+    <link rel="stylesheet" href="../styles/createAccount.css">
 </body>
 </html>
