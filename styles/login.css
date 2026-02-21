@@ -32,6 +32,10 @@ form header{
     font-size: 1.5rem;
 }
 
+#Email-input{
+    margin-left: 34px;
+}
+
 #login-signup{
     width: 100%;
     height: 25%;
