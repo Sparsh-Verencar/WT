@@ -7,43 +7,46 @@
 body {
     display: flex;
     height: 100vh;
-    background-color: rgb(74, 5, 18);
-    color: rgb(190, 146, 51);
+    background-color: #0f172a; 
+    color: #f8fafc; 
 }
 
 .sidebar {
-    width: 295px;
-    background-color: rgb(106, 64, 12);
+    width: 295px; 
+    min-width: 295px; 
+    background-color: #1e293b; 
     display: flex;
     flex-direction: column;
     padding: 20px;
     justify-content: space-between;
 }
 
+.sidebar-links {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; 
+}
+
 .sidebar a {
     font-size: 1.2rem;
     padding: 10px;
-    border: 3px solid rgb(190, 146, 51);
+    border: 3px solid #334155; 
     border-radius: 5px;
     text-align: center;
     cursor: pointer;
     background: none;
-    color: wheat;
+    color: #f8fafc;
     text-decoration: none;
-    background-color: rgb(106, 64, 12);
+    background-color: #1e293b; 
 }
 
 .sidebar a:hover {
-    background-color: #9a6a00;
-}
-
-.sidebar .spacer {
-    flex-grow: 1;
+    background-color: #334155; 
 }
 
 .main {
     flex-grow: 1;
-    background-color: #3b0000;
+    background-color: #0f172a; 
     padding: 30px;
     display: flex;
     flex-direction: column;
@@ -52,7 +55,7 @@ body {
 
 .top-bar h2 {
     font-size: 1.5rem;
-    color: wheat;
+    color: #f8fafc;
     white-space: nowrap;
 }
 
@@ -65,18 +68,17 @@ body {
     width: 50%;
     padding: 10px 15px;
     border-radius: 25px;
-    border: 2px solid #c8960a;
-    background-color: rgb(106, 64, 12);
-    color: #f0d080;
+    border: 2px solid #ff5a5f; 
+    background-color: #1e293b; 
+    color: #ffffff;
     font-size: 15px;
     outline: none;
 }
 
 .search-bar input::placeholder {
-    color: #d4b060;
+    color: #94a3b8; 
 }
 
-/* Book grid */
 .book-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -84,8 +86,8 @@ body {
 }
 
 .book-card {
-    background-color: rgb(106, 64, 12);
-    border: 2px solid #c8960a;
+    background-color: #ffffff; 
+    border: 2px solid #e2e8f0; 
     border-radius: 10px;
     padding: 15px;
     display: flex;
@@ -97,17 +99,18 @@ body {
 .book-card .img-placeholder {
     width: 80px;
     height: 80px;
-    border: 2px solid #c8960a;
+    border: 2px solid #f1f5f9; 
     border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 28px;
-    color: #c8960a;
+    color: #ff5a5f; 
+    background-color: #fff1f2;
 }
 
 .book-card p {
     font-size: 13px;
-    color: #f0d080;
+    color: #0f172a; 
     text-align: center;
 }

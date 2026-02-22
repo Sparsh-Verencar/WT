@@ -1,59 +1,74 @@
-*{
+* {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
-#nav{
+#nav {
     width: 100vw;
     height: 10vh;
-    background-color: rgb(74, 5, 18);
+    background-color: #ffffff; 
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-bottom: 1px solid #eeeeee;
 }
 
-#logo{
+#logo {
     margin-left: 1vw;
     border-radius: 50%;
 }
 
-#auth-but-group{
+#auth-but-group {
     margin-right: 1vw;
 }
 
-#auth-but-group button{
-    padding: 1vh;
-    border-radius: 10%;
+#auth-but-group button {
+    padding: 1vh 2vh; 
+    border-radius: 4px; 
+    background-color: transparent;
+    color: #0f172a; 
+    border: 1px solid #0f172a;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-#header{
+#header {
     width: 100vw;
     height: 90vh;
-    background-color: rgb(106, 64, 12);
+    background-color: #0f172a; 
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    color: #f8fafc;
 }
 
-#header h1{
-   font-size: 10rem;
-   font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+#header h1 {
+    font-size: 10rem;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    color: #ffffff;
+    letter-spacing: -2px;
 }
 
-#header h3{
-   font-size: 2rem;
-   font-family:  'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-   margin-bottom: 10px;
+#header h3 {
+    font-size: 2rem;
+    font-family: 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    margin-bottom: 20px;
+    color: #94a3b8;
 }
 
-#cta{
-   font-size: 2rem;
-   font-family:  'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-   margin-bottom: 10px;
-   padding: 10%;
-   border-radius: 5%;
+#cta {
+    font-size: 1.5rem; 
+    font-family: 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    margin-bottom: 10px;
+    padding: 1.5rem 3rem; 
+    border-radius: 8px;
+    background-color: #ff5a5f;
+    color: #ffffff;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 10px 15px -3px rgba(255, 90, 95, 0.3);
 }
-
-

@@ -1,4 +1,4 @@
-body{
+body {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -8,12 +8,11 @@ body{
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: rgb(74, 5, 18);
-    
+    background-color: #0f172a; 
 }
 
-form{
-    background-color: rgb(106, 64, 12);
+form {
+    background-color: #f8fafc;
     width: 25vw;
     height: 50vh;
     padding: 2%;
@@ -25,27 +24,38 @@ form{
     gap: 1vh;
 }
 
-form header{
+form header {
     font-size: 3rem;
+    color: #1e293b;
 }
 
-#input-group{
+#input-group {
     width: 100%;
     font-size: 1.5rem;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start; 
     justify-content: center;
+    color: #475569;
 }
 
-#input-group input{
+#input-group input {
     font-size: 1rem;
+    width: 100%; 
+    border: 1px solid #cbd5e1;
+    background-color: #ffffff;
+    color: #0f172a;
+    padding: 8px; 
+    box-sizing: border-box;
 }
 
-
-#signup-button button{
-   font-size: large;
-   padding: 5%;
-   border-radius: 5%;
-   margin-top: -18px;
+#signup-button button {
+    font-size: large;
+    padding: 5%;
+    border-radius: 5%;
+    margin-top: -18px;
+    background-color: #ff5a5f;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
 }
