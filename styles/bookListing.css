@@ -116,6 +116,7 @@ body {
 .book-card {
     background-color: #ffffff; 
     border: 2px solid #e2e8f0; 
+    position: relative;
 }
 
 .add-card {
@@ -147,4 +148,30 @@ body {
     color: #0f172a; 
     text-align: center;
     line-height: 1.4;
+}
+
+.buttons{
+    display: flex;
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    gap: 8px;
+}
+
+#edit{
+    cursor: pointer;
+    background-color: #275297;
+    color: white;
+    padding: 1px 2px;
+    border-radius: 3px;
+    border: none;
+}
+
+#del{
+    cursor: pointer;
+    background-color: #ca2727;
+    color: white;
+    padding: 2px 4px;
+    border-radius: 3px;
+    border: none;
 }
