@@ -85,10 +85,6 @@ body {
     margin-left: 125px;
 }
 
-.search-bar input::placeholder {
-    color: #94a3b8; 
-}
-
 .book-grid {
     width: 100%; 
     display: grid;
@@ -123,7 +119,6 @@ body {
     background-color: #fff1f2; 
     border: 2px dashed #ff5a5f; 
     cursor: pointer;
-    transition: background-color 0.2s ease;
     font-size: 8rem; 
     color: #ff5a5f;
 }
