@@ -1,61 +1,176 @@
-body {
-    box-sizing: border-box;
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+body {
     width: 100vw;
     height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: #0f172a; 
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    font-family: 'Comic Sans MS', 'Arial Black', sans-serif;
+    overflow: hidden;
+}
+
+/* Scanline overlay */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255, 255, 255, 0.025) 2px,
+        rgba(255, 255, 255, 0.025) 4px
+    );
+    pointer-events: none;
+    z-index: 999;
 }
 
 form {
-    background-color: #f8fafc;
-    width: 25vw;
-    height: 50vh;
-    padding: 2%;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    width: 100%;
+    max-width: 450px;
+    padding: 3rem 2.5rem 2.5rem;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-    border-radius: 10%;
-    gap: 1vh;
+    gap: 1.75rem;
+    border-radius: 15px;
+    border: 5px solid #1a1a2e;
+    box-shadow: 0 10px 0 #FF006E, 0 15px 40px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: visible;
+    margin-top: 2rem;
+}
+
+/* Halftone dot texture on form */
+form::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 10px;
+    background-image: radial-gradient(circle, rgba(0,0,0,0.07) 1px, transparent 1px);
+    background-size: 8px 8px;
+    pointer-events: none;
+}
+
+/* Decorative ✦ badge — add <span class="form-badge">✦</span> as first child of <form> */
+.form-badge {
+    position: absolute;
+    top: -22px;
+    right: 26px;
+    font-size: 3rem;
+    color: #FB5607;
+    text-shadow: 2px 2px 0 #1a1a2e;
+    line-height: 1;
+    z-index: 1;
 }
 
 form header {
-    font-size: 3rem;
-    color: #1e293b;
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: #1a1a2e;
+    letter-spacing: 1px;
+    text-align: center;
+    font-family: 'Impact', 'Arial Black', sans-serif;
+    text-transform: uppercase;
+    text-shadow: 3px 3px 0 #FB5607;
+    position: relative;
+    z-index: 1;
 }
 
+/* ── FIELD GROUPS ────────────────────────────── */
 #input-group {
-    width: 100%;
-    font-size: 1.5rem;
     display: flex;
     flex-direction: column;
-    align-items: flex-start; 
-    justify-content: center;
-    color: #475569;
+    gap: 1.25rem;
+    position: relative;
+    z-index: 1;
 }
 
-#input-group input {
-    font-size: 1rem;
-    width: 100%; 
-    border: 1px solid #cbd5e1;
-    background-color: #ffffff;
-    color: #0f172a;
-    padding: 8px; 
-    box-sizing: border-box;
+/* Wrap each label+input pair in <div class="field"> */
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+form label {
+    font-size: 0.85rem;
+    color: #1a1a2e;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-family: 'Arial Black', sans-serif;
+}
+
+form input {
+    width: 100%;
+    padding: 0.9rem 1.1rem;
+    border: 3px solid #1a1a2e;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    font-size: 0.95rem;
+    font-family: inherit;
+    color: #1a1a2e;
+    transition: all 0.15s ease;
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+form input:hover {
+    border-color: #FB5607;
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.15), 0 0 10px rgba(251, 86, 7, 0.3);
+}
+
+form input:focus {
+    outline: none;
+    border-color: #FF006E;
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.15), 0 0 15px rgba(255, 0, 110, 0.4);
+}
+
+form input::placeholder {
+    color: #aaa;
+    font-weight: 400;
+}
+
+/* ── BUTTON ──────────────────────────────────── */
+#signup-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 1;
 }
 
 #signup-button button {
-    font-size: large;
-    padding: 5%;
-    border-radius: 5%;
-    margin-top: -18px;
-    background-color: #ff5a5f;
-    color: #ffffff;
-    border: none;
+    font-size: 1rem;
+    font-weight: 900;
+    padding: 1rem 2.2rem;
+    width: 100%;
+    border-radius: 10px;
+    border: 3px solid #1a1a2e;
     cursor: pointer;
+    transition: all 0.15s ease;
+    background: linear-gradient(135deg, #FF006E, #FB5607);
+    color: #FFFF00;
+    box-shadow: 0 6px 0 #1a1a2e, 0 9px 15px rgba(0, 0, 0, 0.4);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-family: 'Arial Black', sans-serif;
+}
+
+#signup-button button:hover {
+    background: linear-gradient(135deg, #FB5607, #FF006E);
+    transform: translateY(-3px);
+    box-shadow: 0 9px 0 #1a1a2e, 0 14px 22px rgba(255, 107, 53, 0.6);
+}
+
+#signup-button button:active {
+    transform: translateY(3px);
+    box-shadow: 0 3px 0 #1a1a2e, 0 4px 8px rgba(0, 0, 0, 0.4);
 }
