@@ -283,7 +283,7 @@ body::before {
     opacity: 1;
 }
 
-#edit {
+.edit-btn {
     cursor: pointer;
     background: linear-gradient(135deg, #FFD700, #FFA500);
     color: #1a1a2e;
@@ -299,13 +299,13 @@ body::before {
     transition: all 0.15s ease;
 }
 
-#edit:hover {
+.edit-btn:hover {
     background: linear-gradient(135deg, #FFA500, #FFD700);
     transform: translateY(-2px);
     box-shadow: 0 5px 0 #1a1a2e, 0 8px 14px rgba(255,215,0,0.3);
 }
 
-#del {
+.del-btn {
     cursor: pointer;
     background: linear-gradient(135deg, #FF006E, #FB5607);
     color: #FFFF00;
@@ -321,7 +321,7 @@ body::before {
     transition: all 0.15s ease;
 }
 
-#del:hover {
+.del-btn:hover {
     background: linear-gradient(135deg, #FB5607, #FF006E);
     color: #FFFFFF;
     transform: translateY(-2px);

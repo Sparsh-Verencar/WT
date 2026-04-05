@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Explore Page</title>
     <link rel="stylesheet" href="../styles/explorepage.css">
+    <link rel="stylesheet" href="../styles/modals.css">
 </head>
 <body>
 
@@ -12,47 +13,41 @@
         <div class="sidebar-links">
             <a href="../pages/explorepage.html">Explore page</a>
             <a href="../pages/myorder.html">My Orders</a>
-            <a href="/pages/bookListing.html">Book listing</a>
+            <a href="../pages/bookListing.html">Book listing</a>
         </div>
         <a href="../pages/myaccountpage.html">My account</a>
     </div>
 
     <div class="main">
-        <div class= "top-bar">
+        <div class="top-bar">
             <h2>Explore</h2>
             <div class="search-bar">
-            <input type="text" placeholder="🔍  Search">
+                <input type="text" id="search-input" placeholder="🔍  Search">
+            </div>
         </div>
-        </div>
-        
 
         <div class="book-grid">
-            <div class="book-card">
-                <div class="img-placeholder"><img src="../images/1984.png" alt="Book-img"></div>
-                <p>Book name<br>Book description<br>Price</p>
-            </div>
-            <div class="book-card">
-                <div class="img-placeholder"><img src="../images/1984.png" alt="Book-img"></div>
-                <p>Book name<br>Book description<br>Price</p>
-            </div>
-            <div class="book-card">
-                <div class="img-placeholder"><img src="../images/1984.png" alt="Book-img"></div>
-                <p>Book name<br>Book description<br>Price</p>
-            </div>
-            <div class="book-card">
-                <div class="img-placeholder"><img src="../images/1984.png" alt="Book-img"></div>
-                <p>Book name<br>Book description<br>Price</p>
-            </div>
-            <div class="book-card">
-                <div class="img-placeholder"><img src="../images/1984.png" alt="Book-img"></div>
-                <p>Book name<br>Book description<br>Price</p>
-            </div>
-            <div class="book-card">
-                <div class="img-placeholder"><img src="../images/1984.png" alt="Book-img"></div>
-                <p>Book name<br>Book description<br>Price</p>
-            </div>
+            <!-- book cards injected here by JS -->
         </div>
     </div>
 
+    <!-- ── BOOK DETAIL MODAL ─────────────────── -->
+    <div id="detail-backdrop" class="modal-backdrop"></div>
+    <div id="detail-modal" class="modal-box">
+        <h3>Book Details</h3>
+        <img id="detail-img" class="detail-cover" src="" alt="Book cover">
+        <div class="detail-info">
+            <strong id="detail-name"></strong>
+            <span id="detail-desc"></span>
+            <span id="detail-price" class="detail-price"></span>
+        </div>
+        <div class="modal-actions">
+            <button id="detail-close" class="modal-btn-cancel">Close</button>
+            <button id="detail-buy"   class="modal-btn-buy">Buy</button>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="../js/explorepage.js"></script>
 </body>
 </html>

@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Account</title>
     <link rel="stylesheet" href="../styles/myaccount.css">
+    <link rel="stylesheet" href="../styles/modals.css">
 </head>
 <body>
     <div id="container">
         <div id="sidebar">
             <div class="nav-links">
-                <a class="nav-item"href="/pages/explorepage.html">Explore page</a>
+                <a class="nav-item" href="../pages/explorepage.html">Explore page</a>
                 <a class="nav-item" href="../pages/myorder.html">My Orders</a>
                 <a class="nav-item" href="../pages/bookListing.html">Book listing</a>
             </div>
@@ -36,5 +37,29 @@
             </div>
         </div>
     </div>
+
+    <!-- ── EDIT PROFILE MODAL ─────────────────── -->
+    <div id="profile-backdrop" class="modal-backdrop"></div>
+    <div id="profile-modal" class="modal-box">
+        <h3>Edit Profile</h3>
+
+        <div class="form-group">
+            <label for="edit-username">Username</label>
+            <input type="text" id="edit-username" placeholder="Your name">
+        </div>
+        <div class="form-group">
+            <label for="edit-image">Profile Image</label>
+            <input type="file" id="edit-image" accept="image/*">
+            <img id="edit-img-preview" class="modal-img-preview" src="" alt="Preview">
+        </div>
+
+        <div class="modal-actions">
+            <button id="profile-modal-close" class="modal-btn-cancel">Cancel</button>
+            <button id="profile-save"        class="modal-btn-save">Save</button>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="../js/myaccount.js"></script>
 </body>
 </html>
