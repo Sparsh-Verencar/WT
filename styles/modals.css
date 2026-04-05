@@ -203,6 +203,7 @@
 }
 
 .detail-price {
+    display: block;
     color: #FFA500;
     font-size: 1rem;
     margin-top: 0.25rem;
