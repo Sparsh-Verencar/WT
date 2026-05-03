@@ -1,15 +1,16 @@
 <?php
 $host = 'localhost';
 $user = 'root';
-$pass = ''; // Adjust to your MySQL root password if set
+$pass = ''; 
 $dbname = 'bookspark';
 
-// Connect without DB first to create it if it doesn't exist
+//connect without db
 $conn = new mysqli($host, $user, $pass);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+//create db
 $db_created = false;
 $sql = "CREATE DATABASE IF NOT EXISTS bookspark";
 if ($conn->query($sql) === TRUE) {
@@ -56,5 +57,4 @@ foreach ($tables as $table) {
 
 // Add columns to existing tables
 $conn->query("ALTER TABLE books ADD COLUMN IF NOT EXISTS status ENUM('available', 'sold') DEFAULT 'available'");
-// We don't alter orders as it might fail on older MySQL, we'll assume it's fresh or ok.
 ?>

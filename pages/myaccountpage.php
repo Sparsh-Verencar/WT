@@ -34,6 +34,7 @@ $books_res = $stmt_b->get_result();
     <title>My Account</title>
     <link rel="stylesheet" href="../styles/myaccount.css">
     <link rel="stylesheet" href="../styles/modals.css">
+    <link rel="stylesheet" href="../styles/bookListing.css">
 </head>
 <body>
     <div id="container">
@@ -66,25 +67,28 @@ $books_res = $stmt_b->get_result();
                 </div>
             </div>
 
-            <!-- Display the listed books -->
-            <div id="user-books" style="margin-top: 30px; background: #fff; padding: 20px; border-radius: 10px; border: 3px solid #1a1a2e; box-shadow: 0 4px 0 #FF006E; color: #1a1a2e; font-family: 'Arial Black', sans-serif;">
-                <h2 style="margin-bottom: 15px; color: #FB5607; text-transform: uppercase;">My Listed Books</h2>
+            <!-- Display the listed books (grid matching Book Listing styles) -->
+            <div id="user-books" style="margin-top: 30px;">
+                <h2 style="margin-bottom: 15px; color: #FB5607; text-transform: uppercase; font-family: 'Arial Black', sans-serif;">My Listed Books</h2>
                 <?php if ($books_res->num_rows === 0): ?>
-                    <p style="font-size: 0.9rem;">You haven't listed any books yet.</p>
+                    <p style="font-size: 0.9rem; color: #fff;">You haven't listed any books yet.</p>
                 <?php else: ?>
-                    <ul style="list-style: none; padding-left: 0;">
+                    <div class="book-grid">
                         <?php while ($b = $books_res->fetch_assoc()): ?>
-                            <li style="border-bottom: 2px solid rgba(0,0,0,0.1); padding: 10px 0; display: flex; justify-content: space-between;">
-                                <span><?= htmlspecialchars($b['title']) ?></span>
-                                <div>
-                                    <span style="color: #FF006E; margin-right: 10px;"><?= htmlspecialchars($b['price']) ?></span>
+                            <?php $img = !empty($b['image_path']) ? htmlspecialchars($b['image_path']) : '../images/1984.png'; ?>
+                            <div class="book-card" data-id="<?= htmlspecialchars($b['id']) ?>">
+                                <div class="buttons" style="display:flex; gap:6px;">
                                     <?php if (isset($b['status']) && $b['status'] === 'sold'): ?>
-                                        <span style="background: red; color: white; padding: 4px 10px; border-radius: 4px; font-weight: bold; font-size: 12px; font-family: 'Arial Black', sans-serif;">SOLD</span>
+                                        <span style="background: red; color: white; padding: 4px 10px; border-radius: 4px; font-weight: bold; font-size: 12px; display:inline-block; font-family: 'Arial Black', sans-serif;">SOLD</span>
+                                    <?php else: ?>
+                                        <a class="edit-btn" href="bookListing.php?edit=<?= htmlspecialchars($b['id']) ?>" onclick="event.stopPropagation();">Edit</a>
                                     <?php endif; ?>
                                 </div>
-                            </li>
+                                <div class="img-placeholder"><img src="<?= $img ?>" alt="Book-img"></div>
+                                <p class="book-title"><?= htmlspecialchars($b['title']) ?><br><span style="font-size:0.85rem; color:#FFD700; font-weight:700;"><?= htmlspecialchars($b['price']) ?></span></p>
+                            </div>
                         <?php endwhile; ?>
-                    </ul>
+                    </div>
                 <?php endif; ?>
             </div>
 
@@ -114,5 +118,6 @@ $books_res = $stmt_b->get_result();
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="../js/myaccount.js"></script>
+    <script src="../js/ajax/account-ajax.js"></script>
 </body>
 </html>

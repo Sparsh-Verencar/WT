@@ -3,6 +3,8 @@ session_start();
 include '../php/db.php';
 
 $error = '';
+// Detect AJAX (XMLHttpRequest)
+$is_ajax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
@@ -17,6 +19,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (password_verify($password, $row['password'])) {
                     $_SESSION['user_id'] = $row['id'];
                     $_SESSION['username'] = $row['username'];
+                    if ($is_ajax) {
+                        header('Content-Type: application/json');
+                        echo json_encode(['success' => true, 'redirect' => 'explorepage.php']);
+                        exit;
+                    }
                     header("Location: explorepage.php");
                     exit;
                 } else {
@@ -32,6 +39,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $error = "All fields are required.";
     }
+    if ($is_ajax) {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'message' => $error]);
+        exit;
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -46,6 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <form action="login.php" method="POST">
         <div class="form-badge">!</div>
         <header>Login</header>
+        <div id="ajax-message" role="status" aria-live="polite"></div>
         <?php if (!empty($error)): ?>
             <p style="color: #FF006E; font-family: 'Arial Black', sans-serif; text-align: center; text-shadow: 1px 1px 0px #fff;"><?= htmlspecialchars($error) ?></p>
         <?php endif; ?>
@@ -68,11 +81,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </section>
     </form>
     <script src="../js/login.js"></script>
+    <script src="../js/ajax/login-ajax.js"></script>
     <script>
         $(document).ready(function() {
-            // Overwrite the JS behavior for the form submission to allow PHP POST
+            // Keep default button click behaviour; AJAX handler will bind to the form submit event.
             $('button').off('click').on('click', function(e) {
-                // HTML5 validation lets native submit proceed
+                // intentionally empty — form submit handled separately
             });
         });
     </script>

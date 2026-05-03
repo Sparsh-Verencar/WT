@@ -45,5 +45,6 @@ $is_logged_in = isset($_SESSION['user_id']);
     </section>
     <link rel="stylesheet" href="styles/style.css">
     <script src="js/index.js"></script>
+    <script src="js/ajax/account-ajax.js"></script>
 </body>
 </html>

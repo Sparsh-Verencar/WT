@@ -11,6 +11,8 @@ $error = '';
 $success = '';
 $edit_mode = false;
 $edit_book = null;
+// Detect AJAX
+$is_ajax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 
 if (isset($_GET['edit'])) {
     $edit_id = intval($_GET['edit']);
@@ -46,9 +48,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $stmt = $conn->prepare("INSERT INTO books (seller_id, title, description, price, image_path) VALUES (?, ?, ?, ?, ?)");
         $stmt->bind_param("issss", $seller_id, $title, $desc, $price, $image_path);
         if ($stmt->execute()) {
+            $new_id = $stmt->insert_id;
             $success = "Book added successfully.";
+            if ($is_ajax) {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => true, 'book' => [
+                    'id' => $new_id,
+                    'title' => $title,
+                    'description' => $desc,
+                    'price' => $price,
+                    'image_path' => $image_path
+                ]]);
+                exit;
+            }
         } else {
             $error = "Failed to add book.";
+            if ($is_ajax) {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => $error]);
+                exit;
+            }
         }
         $stmt->close();
     } elseif ($_POST['action'] === 'delete_book') {
@@ -56,7 +75,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $seller_id = $_SESSION['user_id'];
         $stmt = $conn->prepare("DELETE FROM books WHERE id = ? AND seller_id = ?");
         $stmt->bind_param("ii", $book_id, $seller_id);
-        $stmt->execute();
+        if ($stmt->execute()) {
+            if ($is_ajax) {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => true, 'book_id' => $book_id]);
+                exit;
+            }
+        } else {
+            if ($is_ajax) {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'Failed to delete']);
+                exit;
+            }
+        }
         $stmt->close();
     } elseif ($_POST['action'] === 'edit_book') {
         $book_id = intval($_POST['book_id'] ?? 0);
@@ -86,11 +117,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         
         if ($stmt->execute()) {
             $success = "Book updated successfully.";
+            if ($is_ajax) {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => true, 'book' => [
+                    'id' => $book_id,
+                    'title' => $title,
+                    'description' => $desc,
+                    'price' => $price,
+                    'image_path' => $image_path !== null ? $image_path : ''
+                ]]);
+                exit;
+            }
         } else {
             $error = "Failed to update book.";
+            if ($is_ajax) {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => $error]);
+                exit;
+            }
         }
         $stmt->close();
     }
+}
+
+// AJAX GET: return JSON list for search/filter
+if (isset($_GET['ajax']) && $_GET['ajax'] == '1') {
+    $q = isset($_GET['q']) ? trim($_GET['q']) : '';
+    $seller_id = $_SESSION['user_id'];
+    if ($q !== '') {
+        $like = '%' . $q . '%';
+        $stmt_list = $conn->prepare("SELECT * FROM books WHERE seller_id = ? AND (title LIKE ? OR description LIKE ?) ORDER BY created_at DESC");
+        $stmt_list->bind_param('iss', $seller_id, $like, $like);
+    } else {
+        $stmt_list = $conn->prepare("SELECT * FROM books WHERE seller_id = ? ORDER BY created_at DESC");
+        $stmt_list->bind_param('i', $seller_id);
+    }
+    $stmt_list->execute();
+    $res = $stmt_list->get_result();
+    $books = [];
+    while ($r = $res->fetch_assoc()) {
+        $books[] = [
+            'id' => $r['id'],
+            'title' => $r['title'],
+            'description' => $r['description'],
+            'price' => $r['price'],
+            'image_path' => $r['image_path'] ?: '../images/1984.png',
+            'status' => isset($r['status']) ? $r['status'] : ''
+        ];
+    }
+    header('Content-Type: application/json');
+    echo json_encode(['success' => true, 'books' => $books]);
+    exit;
 }
 
 $seller_id = $_SESSION['user_id'];
