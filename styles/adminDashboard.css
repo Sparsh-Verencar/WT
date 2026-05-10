@@ -1,0 +1,160 @@
+/* Overall layout */
+.admin-wrapper { 
+    display: flex; 
+    min-height: 100vh; 
+    width: 100%; 
+}
+
+.admin-sidebar { 
+    width: 240px; 
+    min-width: 240px; 
+}
+
+.admin-main { 
+    flex: 1; 
+    padding: 2rem; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 2rem; 
+    overflow-y: auto; 
+}
+
+/* Stat cards row */
+.stats-grid { 
+    display: grid; 
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 1.5rem; 
+}
+
+.stat-card {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    padding: 1.5rem;
+    border-radius: 10px;
+    border: 3px solid #1a1a2e;
+    box-shadow: 0 5px 0 #FF006E, 0 10px 20px rgba(0,0,0,0.3);
+    text-align: center;
+}
+
+.stat-card h3 {
+    font-size: 1.1rem;
+    color: #1a1a2e;
+    font-family: 'Impact', 'Arial Black', sans-serif;
+    margin-bottom: 10px;
+}
+
+.stat-card p {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #FF006E;
+    text-shadow: 1px 1px 0px #fff;
+    font-family: 'Arial Black', sans-serif;
+}
+
+.admin-panel {
+    background-color: #16213e;
+    border-radius: 10px;
+    border: 3px solid #FF006E;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+
+/* Commission update — slim bar */
+.commission-update-bar { 
+    max-width: 500px; 
+    margin: 0 auto; 
+    width: 100%;
+    display: flex; 
+    align-items: center; 
+    gap: 1rem; 
+    padding: 1.2rem 1.5rem; 
+}
+
+.commission-update-bar label { 
+    white-space: nowrap; 
+    font-weight: bold; 
+    color: #FB5607; 
+    text-transform: uppercase; 
+    font-family: 'Arial Black', sans-serif;
+}
+
+.commission-update-bar input { 
+    flex: 1; 
+    padding: 10px; 
+    border-radius: 5px; 
+    border: 2px solid #1a1a2e;
+}
+
+/* Transactions — full width */
+.transactions-section { 
+    width: 100%; 
+    padding: 25px;
+}
+
+.transactions-section h2 {
+    margin-bottom: 15px; 
+    color: #FB5607; 
+    text-transform: uppercase; 
+    font-family: 'Arial Black', sans-serif;
+}
+
+.table-wrapper { 
+    overflow-x: auto; 
+}
+
+#transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #FFF;
+    color: #1a1a2e;
+    font-family: 'Arial', sans-serif;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#transactions-table th, #transactions-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+#transactions-table th {
+    background-color: #FFD700;
+    font-weight: 900;
+    font-family: 'Arial Black', sans-serif;
+    text-transform: uppercase;
+}
+
+#transactions-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.admin-btn {
+    font-size: 1rem;
+    font-weight: 900;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 2px solid #1a1a2e;
+    cursor: pointer;
+    background: #FF006E;
+    color: #FFF;
+    text-transform: uppercase;
+    font-family: 'Arial Black', sans-serif;
+    transition: all 0.2s;
+}
+
+.admin-btn:hover {
+    background: #FB5607;
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .admin-wrapper { flex-direction: column; }
+  .admin-sidebar { width: 100%; min-width: unset; }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .commission-update-bar { flex-direction: column; align-items: stretch; text-align: center; }
+  .commission-update-bar form { flex-direction: column; width: 100%; }
+}

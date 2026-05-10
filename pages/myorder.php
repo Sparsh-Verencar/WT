@@ -48,6 +48,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['buy_book'])) {
         $stmt_ins->bind_param("ii", $user_id, $book_id);
         $stmt_ins->execute();
         $stmt_ins->close();
+
+        // Transaction logging for Admin
+        $stmt_b = $conn->prepare("SELECT seller_id, price FROM books WHERE id = ?");
+        $stmt_b->bind_param("i", $book_id);
+        $stmt_b->execute();
+        $res_b = $stmt_b->get_result();
+        if ($row_b = $res_b->fetch_assoc()) {
+            $seller_id = $row_b['seller_id'];
+            $raw_price = str_replace('₹', '', $row_b['price']);
+            $sale_price = (float)$raw_price;
+            
+            $stmt_r = $conn->prepare("SELECT rate FROM commission_rate WHERE id = 1");
+            $stmt_r->execute();
+            $res_r = $stmt_r->get_result();
+            $rate = 10.00;
+            if ($row_r = $res_r->fetch_assoc()) {
+                $rate = (float)$row_r['rate'];
+            }
+            $stmt_r->close();
+            
+            $commission_amount = $sale_price * ($rate / 100);
+            
+            $stmt_tx = $conn->prepare("INSERT INTO transactions (seller_id, buyer_id, book_id, sale_price, commission_amount) VALUES (?, ?, ?, ?, ?)");
+            $stmt_tx->bind_param("iiidd", $seller_id, $user_id, $book_id, $sale_price, $commission_amount);
+            $stmt_tx->execute();
+            $stmt_tx->close();
+        }
+        $stmt_b->close();
     } else {
         $stmt_check->close();
     }

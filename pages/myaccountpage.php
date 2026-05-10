@@ -68,7 +68,7 @@ $books_res = $stmt_b->get_result();
             </div>
 
             <!-- Display the listed books (grid matching Book Listing styles) -->
-            <div id="user-books" style="margin-top: 30px;">
+            <!-- <div id="user-books" style="margin-top: 30px;">
                 <h2 style="margin-bottom: 15px; color: #FB5607; text-transform: uppercase; font-family: 'Arial Black', sans-serif;">My Listed Books</h2>
                 <?php if ($books_res->num_rows === 0): ?>
                     <p style="font-size: 0.9rem; color: #fff;">You haven't listed any books yet.</p>
@@ -90,7 +90,7 @@ $books_res = $stmt_b->get_result();
                         <?php endwhile; ?>
                     </div>
                 <?php endif; ?>
-            </div>
+            </div> -->
 
         </div>
     </div>

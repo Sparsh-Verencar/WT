@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     if ($_POST['action'] === 'add_book') {
         $title = trim($_POST['title']);
         $desc = trim($_POST['description']);
-        $price = trim($_POST['price']);
+        $price = '₹' . ltrim(trim($_POST['price']), '₹');
         $seller_id = $_SESSION['user_id'];
         
         $image_path = '';
@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $book_id = intval($_POST['book_id'] ?? 0);
         $title = trim($_POST['title']);
         $desc = trim($_POST['description']);
-        $price = trim($_POST['price']);
+        $price = '₹' . ltrim(trim($_POST['price']), '₹');
         $seller_id = $_SESSION['user_id'];
         
         $image_path = null;
@@ -272,7 +272,10 @@ $js_books_array = [];
             </div>
             <div class="form-group">
                 <label for="input-price">Price</label>
-                <input type="text" id="input-price" name="price" placeholder="e.g. $9.99" required value="<?= $edit_mode ? htmlspecialchars($edit_book['price']) : '' ?>">
+                <div class="input-group-price">
+                    <span class="currency-symbol">₹</span>
+                    <input type="number" step="0.01" min="0" id="input-price" name="price" placeholder="e.g. 300" required value="<?= $edit_mode ? htmlspecialchars(str_replace('₹', '', $edit_book['price'])) : '' ?>">
+                </div>
             </div>
             <div class="form-group">
                 <label for="input-image">Book Image</label>

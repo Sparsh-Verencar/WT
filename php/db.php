@@ -48,12 +48,37 @@ $tables = [
         status ENUM('pending', 'completed') DEFAULT 'completed',
         FOREIGN KEY (buyer_id) REFERENCES users(id) ON DELETE CASCADE,
         FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
+    )",
+    "CREATE TABLE IF NOT EXISTS admins (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(100) NOT NULL UNIQUE,
+        password VARCHAR(255) NOT NULL
+    )",
+    "CREATE TABLE IF NOT EXISTS commission_rate (
+        id INT PRIMARY KEY DEFAULT 1,
+        rate DECIMAL(5,2) NOT NULL COMMENT 'Percentage e.g. 10.00 means 10%'
+    )",
+    "CREATE TABLE IF NOT EXISTS transactions (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        seller_id INT NOT NULL,
+        buyer_id INT NOT NULL,
+        book_id INT NOT NULL,
+        sale_price DECIMAL(10,2) NOT NULL,
+        commission_amount DECIMAL(10,2) NOT NULL,
+        transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )"
 ];
 
 foreach ($tables as $table) {
     $conn->query($table);
 }
+
+// Default admin
+$admin_pass = password_hash('admin123', PASSWORD_DEFAULT);
+$conn->query("INSERT IGNORE INTO admins (username, password) VALUES ('admin', '$admin_pass')");
+
+// Default commission rate
+$conn->query("INSERT IGNORE INTO commission_rate (id, rate) VALUES (1, 10.00)");
 
 // Add columns to existing tables
 $conn->query("ALTER TABLE books ADD COLUMN IF NOT EXISTS status ENUM('available', 'sold') DEFAULT 'available'");

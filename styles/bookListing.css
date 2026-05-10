@@ -349,3 +349,47 @@ body::before {
 .main::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(#FFA500, #FF006E);
 }
+
+/* ── PRICE INPUT GROUP ───────────────────────── */
+.input-group-price {
+    display: flex;
+    align-items: stretch;
+    border: 3px solid #1a1a2e;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #FFFFFF;
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.15);
+    transition: all 0.15s ease;
+}
+
+.input-group-price:focus-within {
+    border-color: #FF006E;
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.15), 0 0 15px rgba(255, 0, 110, 0.4);
+}
+
+.currency-symbol {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.9rem 1rem;
+    background-color: #f1f1f1;
+    color: #1a1a2e;
+    font-weight: 900;
+    font-family: 'Arial Black', sans-serif;
+    border-right: 2px solid #1a1a2e;
+}
+
+.input-group-price input {
+    width: 100%;
+    padding: 0.9rem 1.1rem;
+    border: none;
+    background: transparent;
+    font-size: 0.95rem;
+    font-family: inherit;
+    color: #1a1a2e;
+    box-shadow: none;
+}
+
+.input-group-price input:focus {
+    outline: none;
+}
