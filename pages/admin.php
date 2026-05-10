@@ -48,6 +48,11 @@ $earnings_row = $earnings_result->fetch_assoc();
 $total_earnings = $earnings_row['total_earnings'] ?? 0;
 $total_sales = $earnings_row['total_sales'] ?? 0;
 
+// Calculate total commission (5% of all sales)
+$commission_rate = 0.05;
+$total_commission = intval($total_earnings * $commission_rate);
+$total_seller_payouts = intval($total_earnings * (1 - $commission_rate));
+
 // Fetch seller statistics
 $seller_stats_query = $conn->prepare("
     SELECT 
@@ -114,6 +119,14 @@ while ($row = $seller_stats_result->fetch_assoc()) {
                     </div>
 
                     <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #4CAF50, #45a049);">💰</div>
+                        <div class="stat-content">
+                            <h3>Admin Commission (5%)</h3>
+                            <p class="stat-value" style="color: #4CAF50;">₹<?= number_format($total_commission) ?></p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
                         <div class="stat-icon" style="background: linear-gradient(135deg, #FF006E, #FB5607);">📚</div>
                         <div class="stat-content">
                             <h3>Books Sold</h3>
@@ -136,20 +149,40 @@ while ($row = $seller_stats_result->fetch_assoc()) {
                             <p class="stat-value"><?= count($books_data) ?></p>
                         </div>
                     </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #FF6B6B, #ff5252);">💸</div>
+                        <div class="stat-content">
+                            <h3>Seller Payouts (95%)</h3>
+                            <p class="stat-value">₹<?= number_format($total_seller_payouts) ?></p>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="summary-box">
-                    <h2 style="color: #FFD700; margin-bottom: 15px;">Quick Summary</h2>
+                    <h2 style="color: #FFD700; margin-bottom: 15px;">💰 Commission Summary</h2>
                     <ul style="list-style: none; padding: 0;">
-                        <li style="padding: 10px 0; border-bottom: 1px solid #333; display: flex; justify-content: space-between;">
-                            <span>Platform Commission (if applicable)</span>
-                            <strong>₹<?= number_format(intval($total_earnings * 0.1)) ?></strong>
+                        <li style="padding: 12px 0; border-bottom: 1px solid #333; display: flex; justify-content: space-between;">
+                            <span>Total Sales Revenue</span>
+                            <strong style="color: #FFD700;">₹<?= number_format($total_earnings) ?></strong>
                         </li>
-                        <li style="padding: 10px 0; border-bottom: 1px solid #333; display: flex; justify-content: space-between;">
+                        <li style="padding: 12px 0; border-bottom: 1px solid #333; display: flex; justify-content: space-between;">
+                            <span>Admin Commission (5%)</span>
+                            <strong style="color: #4CAF50;">₹<?= number_format($total_commission) ?></strong>
+                        </li>
+                        <li style="padding: 12px 0; border-bottom: 1px solid #333; display: flex; justify-content: space-between;">
+                            <span>Seller Payouts (95%)</span>
+                            <strong style="color: #FF6B6B;">₹<?= number_format($total_seller_payouts) ?></strong>
+                        </li>
+                        <li style="padding: 12px 0; border-bottom: 1px solid #333; display: flex; justify-content: space-between;">
                             <span>Average Book Price</span>
                             <strong>₹<?= $total_sales > 0 ? number_format(intval($total_earnings / $total_sales)) : '0' ?></strong>
                         </li>
-                        <li style="padding: 10px 0; display: flex; justify-content: space-between;">
+                        <li style="padding: 12px 0; border-bottom: 1px solid #333; display: flex; justify-content: space-between;">
+                            <span>Average Commission per Sale</span>
+                            <strong style="color: #4CAF50;">₹<?= $total_sales > 0 ? number_format(intval($total_commission / $total_sales)) : '0' ?></strong>
+                        </li>
+                        <li style="padding: 12px 0; display: flex; justify-content: space-between;">
                             <span>Books Still Available</span>
                             <strong><?= count(array_filter($books_data, function($b) { return $b['status'] !== 'sold'; })) ?></strong>
                         </li>
@@ -172,6 +205,8 @@ while ($row = $seller_stats_result->fetch_assoc()) {
                                 <th>Author</th>
                                 <th>Genre</th>
                                 <th>Price</th>
+                                <th>Commission (5%)</th>
+                                <th>Seller Payout</th>
                                 <th>Seller</th>
                                 <th>Status</th>
                                 <th>Buyer</th>
@@ -185,6 +220,8 @@ while ($row = $seller_stats_result->fetch_assoc()) {
                                     <td><?= htmlspecialchars($book['author'] ?? '—') ?></td>
                                     <td><?= htmlspecialchars($book['genre'] ?? '—') ?></td>
                                     <td style="color: #FFD700; font-weight: bold;">₹<?= number_format($book['price']) ?></td>
+                                    <td style="color: #4CAF50; font-weight: bold;">₹<?= number_format(intval($book['price'] * 0.05)) ?></td>
+                                    <td style="color: #FF6B6B; font-weight: bold;">₹<?= number_format(intval($book['price'] * 0.95)) ?></td>
                                     <td>
                                         <div style="font-size: 0.9rem;">
                                             <strong><?= htmlspecialchars($book['seller_name']) ?></strong><br>

@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         }
         
         $stmt = $conn->prepare("INSERT INTO books (seller_id, title, author, genre, description, price, image_path) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("issssisi", $seller_id, $title, $author, $genre, $desc, $price, $image_path);
+        $stmt->bind_param("issssis", $seller_id, $title, $author, $genre, $desc, $price, $image_path);
         if ($stmt->execute()) {
             $new_id = $stmt->insert_id;
             $success = "Book added successfully.";
@@ -142,7 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             $stmt->bind_param("ssssisii", $title, $author, $genre, $desc, $price, $image_path, $book_id, $seller_id);
         } else {
             $stmt = $conn->prepare("UPDATE books SET title = ?, author = ?, genre = ?, description = ?, price = ? WHERE id = ? AND seller_id = ?");
-            $stmt->bind_param("sssssii", $title, $author, $genre, $desc, $price, $book_id, $seller_id);
+            $stmt->bind_param("ssssiii", $title, $author, $genre, $desc, $price, $book_id, $seller_id);
         }
         
         if ($stmt->execute()) {

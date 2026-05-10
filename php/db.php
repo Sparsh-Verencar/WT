@@ -74,4 +74,11 @@ if ($col_check && $col_row = $col_check->fetch_assoc()) {
 // Add columns to existing tables
 $conn->query("ALTER TABLE books ADD COLUMN IF NOT EXISTS genre VARCHAR(100)");
 $conn->query("ALTER TABLE books ADD COLUMN IF NOT EXISTS status ENUM('available', 'sold') DEFAULT 'available'");
+
+// Add payment columns to orders table
+$conn->query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS commission_amount INT DEFAULT 0");
+$conn->query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS seller_payout INT DEFAULT 0");
+$conn->query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS payment_method VARCHAR(50) DEFAULT 'razorpay'");
+$conn->query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS payment_id VARCHAR(100)");
+$conn->query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS payment_status VARCHAR(50) DEFAULT 'pending'");
 ?>
