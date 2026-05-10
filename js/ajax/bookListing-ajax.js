@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const p = document.createElement('p');
     p.className = 'book-title';
-    p.innerHTML = (book.title ? escapeHtml(book.title) : '') + '<br>' + (book.description ? escapeHtml(book.description) : '') + '<br>' + (book.price ? escapeHtml(book.price) : '');
+    p.innerHTML = (book.title ? escapeHtml(book.title) : '') + '<br>' + (book.description ? escapeHtml(book.description) : '') + '<br>' + (book.price ? '\u20B9' + escapeHtml(book.price) : '');
 
     div.appendChild(buttons);
     div.appendChild(imgWrap);

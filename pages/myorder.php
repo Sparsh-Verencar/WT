@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['buy_book'])) {
 // Fetch all orders
 $orders = [];
 $stmt = $conn->prepare("
-    SELECT o.status, o.order_date, b.id as book_id, b.title, b.author, b.description, b.price, b.image_path 
+    SELECT o.status, o.order_date, b.id as book_id, b.title, b.author, b.genre, b.description, b.price, b.image_path 
     FROM orders o 
     JOIN books b ON o.book_id = b.id 
     WHERE o.buyer_id = ? 
@@ -106,10 +106,20 @@ $result = $stmt->get_result();
                 <div class="img-placeholder"><img src="<?= $img ?>" alt="Book-img"></div>
                 <p class="book-title" style="position: relative;">
                     <strong><?= htmlspecialchars($row['title']) ?></strong>
-                    <?php if (!empty($row['author'])): ?>
-                        <br>by <?= htmlspecialchars($row['author']) ?>
+                    <?php if (!empty($row['author']) || !empty($row['genre'])): ?>
+                        <br><small style="color:#888;">
+                            <?php if (!empty($row['author'])): ?>
+                                By <?= htmlspecialchars($row['author']) ?>
+                            <?php endif; ?>
+                            <?php if (!empty($row['author']) && !empty($row['genre'])): ?>
+                                •
+                            <?php endif; ?>
+                            <?php if (!empty($row['genre'])): ?>
+                                <?= htmlspecialchars($row['genre']) ?>
+                            <?php endif; ?>
+                        </small>
                     <?php endif; ?>
-                    <br><?= htmlspecialchars($row['price']) ?>
+                    <br>&#8377;<?= htmlspecialchars($row['price']) ?>
                     <br><span style="font-size: 0.8rem; color: #888;">Ordered: <?= date('d M Y', strtotime($row['order_date'])) ?></span>
                     <br><span style="background: green; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; margin-top: 5px; display: inline-block;">PURCHASED</span>
                 </p>

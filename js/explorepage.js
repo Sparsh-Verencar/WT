@@ -19,13 +19,23 @@ $(document).ready(function () {
             ? '<img src="' + book.image + '" alt="Book-img">'
             : '<img src="../images/1984.png" alt="Book-img">';
 
+        var authorGenre = '';
+        if (book.author || book.genre) {
+            authorGenre = '<small style="color:#888;">';
+            if (book.author) authorGenre += 'By ' + escHtml(book.author);
+            if (book.author && book.genre) authorGenre += ' • ';
+            if (book.genre) authorGenre += escHtml(book.genre);
+            authorGenre += '</small><br>';
+        }
+
         return $(
             '<div class="book-card" data-id="' + book.id + '">' +
                 '<div class="img-placeholder">' + imgTag + '</div>' +
                 '<p class="book-title">' +
                     escHtml(book.name) + '<br>' +
+                    authorGenre +
                     escHtml(book.description) + '<br>' +
-                    escHtml(book.price) +
+                    '\u20B9' + escHtml(book.price) +
                 '</p>' +
             '</div>'
         );
@@ -60,8 +70,18 @@ $(document).ready(function () {
 
         $('#detail-img').attr('src', book.image || '../images/1984.png');
         $('#detail-name').text(book.name);
-        $('#detail-desc').text(book.description);
-        $('#detail-price').text('Price: ' + book.price);
+        
+        var authorGenreText = '';
+        if (book.author || book.genre) {
+            authorGenreText = '';
+            if (book.author) authorGenreText += 'By ' + book.author;
+            if (book.author && book.genre) authorGenreText += ' • ';
+            if (book.genre) authorGenreText += book.genre;
+            authorGenreText += ' | ';
+        }
+        
+        $('#detail-desc').text(authorGenreText + book.description);
+        $('#detail-price').text('Price: \u20B9' + book.price);
         $('#detail-modal').data('current-book-id', id).fadeIn(200);
     });
 

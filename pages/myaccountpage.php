@@ -21,7 +21,7 @@ if ($row = $res->fetch_assoc()) {
 $stmt->close();
 
 // Fetch listed books by this user
-$stmt_b = $conn->prepare("SELECT id, title, price, status FROM books WHERE seller_id = ? ORDER BY created_at DESC");
+$stmt_b = $conn->prepare("SELECT id, title, author, genre, price, status, image_path FROM books WHERE seller_id = ? ORDER BY created_at DESC");
 $stmt_b->bind_param("i", $user_id);
 $stmt_b->execute();
 $books_res = $stmt_b->get_result();
@@ -34,7 +34,6 @@ $books_res = $stmt_b->get_result();
     <title>My Account</title>
     <link rel="stylesheet" href="../styles/myaccount.css">
     <link rel="stylesheet" href="../styles/modals.css">
-    <link rel="stylesheet" href="../styles/bookListing.css">
 </head>
 <body>
     <div id="container">
@@ -47,7 +46,7 @@ $books_res = $stmt_b->get_result();
             <div class="nav-item">My account</div>
         </div>
 
-        <div id="content" style="overflow-y: auto;">
+        <div id="content">
             <div id="account-card">
                 <button id="edit-btn">edit</button>
                 <div id="profile-pic">
@@ -68,24 +67,33 @@ $books_res = $stmt_b->get_result();
             </div>
 
             <!-- Display the listed books (grid matching Book Listing styles) -->
-            <div id="user-books" style="margin-top: 30px;">
-                <h2 style="margin-bottom: 15px; color: #FB5607; text-transform: uppercase; font-family: 'Arial Black', sans-serif;">My Listed Books</h2>
+            <div id="user-books">
+                <h2 class="section-title">My Listed Books</h2>
                 <?php if ($books_res->num_rows === 0): ?>
-                    <p style="font-size: 0.9rem; color: #fff;">You haven't listed any books yet.</p>
+                    <p class="empty-state">You haven't listed any books yet.</p>
                 <?php else: ?>
                     <div class="book-grid">
                         <?php while ($b = $books_res->fetch_assoc()): ?>
                             <?php $img = !empty($b['image_path']) ? htmlspecialchars($b['image_path']) : '../images/1984.png'; ?>
                             <div class="book-card" data-id="<?= htmlspecialchars($b['id']) ?>">
-                                <div class="buttons" style="display:flex; gap:6px;">
+                                <div class="buttons">
                                     <?php if (isset($b['status']) && $b['status'] === 'sold'): ?>
-                                        <span style="background: red; color: white; padding: 4px 10px; border-radius: 4px; font-weight: bold; font-size: 12px; display:inline-block; font-family: 'Arial Black', sans-serif;">SOLD</span>
+                                        <span class="sold-badge">SOLD</span>
                                     <?php else: ?>
                                         <a class="edit-btn" href="bookListing.php?edit=<?= htmlspecialchars($b['id']) ?>" onclick="event.stopPropagation();">Edit</a>
                                     <?php endif; ?>
                                 </div>
                                 <div class="img-placeholder"><img src="<?= $img ?>" alt="Book-img"></div>
-                                <p class="book-title"><?= htmlspecialchars($b['title']) ?><br><span style="font-size:0.85rem; color:#FFD700; font-weight:700;"><?= htmlspecialchars($b['price']) ?></span></p>
+                                <p class="book-title">
+                                    <?= htmlspecialchars($b['title']) ?><br>
+                                    <?php if (isset($b['author']) && $b['author']): ?>
+                                        <small style="color:#888;">By <?= htmlspecialchars($b['author']) ?></small><br>
+                                    <?php endif; ?>
+                                    <?php if (isset($b['genre']) && $b['genre']): ?>
+                                        <small style="color:#888;"><?= htmlspecialchars($b['genre']) ?></small><br>
+                                    <?php endif; ?>
+                                    <span class="book-price">&#8377;<?= htmlspecialchars($b['price']) ?></span>
+                                </p>
                             </div>
                         <?php endwhile; ?>
                     </div>

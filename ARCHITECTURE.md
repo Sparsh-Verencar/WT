@@ -29,7 +29,8 @@ WT/
 │   ├── explorepage.php        # Browse/explore books
 │   ├── bookListing.php        # Detailed book listing view
 │   ├── myaccountpage.php      # User account/profile page
-│   └── myorder.php            # User orders/purchase history
+│   ├── myorder.php            # User orders/purchase history
+│   └── admin.php              # Admin dashboard (analytics & earnings)
 ├── php/                       # Backend PHP scripts
 │   ├── db.php                 # Database connection and schema setup
 │   ├── deleteAccount.php      # Account deletion endpoint
@@ -41,8 +42,9 @@ WT/
     ├── explorepage.css        # Explore page styles
     ├── bookListing.css        # Book listing styles
     ├── myaccount.css          # Account page styles
+    ├── myorder.css            # Orders page styles
     ├── modals.css             # Styles for UI modals
-    └── myorder.css            # Orders page styles
+    └── admin.css              # Admin dashboard styles
 ```
 
 ## Technology Stack
@@ -68,6 +70,13 @@ WT/
 - **pages/bookListing.php** - Detailed view of a specific book, allowing purchasing
 - **pages/myaccountpage.php** - User profile, account settings, and account deletion
 - **pages/myorder.php** - User's order history and purchase management
+
+### Admin Dashboard (Restricted Access)
+- **pages/admin.php** - Exclusive admin analytics dashboard (access restricted to admin user, default: user_id=1)
+  - **Overview**: Key metrics including total platform earnings, books sold, active sellers, and total listings
+  - **Books & Sales**: Detailed transaction history table showing all books with seller/buyer information
+  - **Seller Performance**: Individual seller cards with revenue, conversion rates, and activity metrics
+  - Styled with `styles/admin.css` to match the vibrant Book Spark theme
 
 ## Navigation Flow
 

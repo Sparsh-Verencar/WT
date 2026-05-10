@@ -15,6 +15,15 @@ $(document).ready(function () {
             ? '<img src="' + book.image + '" alt="Book-img">'
             : '<img src="../images/1984.png" alt="Book-img">';
 
+        var authorGenre = '';
+        if (book.author || book.genre) {
+            authorGenre = '<small style="color:#888;">';
+            if (book.author) authorGenre += 'By ' + escHtml(book.author);
+            if (book.author && book.genre) authorGenre += ' • ';
+            if (book.genre) authorGenre += escHtml(book.genre);
+            authorGenre += '</small><br>';
+        }
+
         return $(
             '<div class="book-card" data-id="' + book.id + '">' +
                 '<div class="buttons">' +
@@ -24,8 +33,9 @@ $(document).ready(function () {
                 '<div class="img-placeholder">' + imgTag + '</div>' +
                 '<p class="book-title">' +
                     escHtml(book.name) + '<br>' +
+                    authorGenre +
                     escHtml(book.description) + '<br>' +
-                    escHtml(book.price) +
+                    '\u20B9' + escHtml(book.price) +
                 '</p>' +
             '</div>'
         );
@@ -99,6 +109,8 @@ $(document).ready(function () {
 
         $('#modal-title').text(mode === 'add' ? 'Add Book' : 'Edit Book');
         $('#input-name').val(mode === 'edit' ? book.name : '');
+        $('#input-author').val(mode === 'edit' ? (book.author || '') : '');
+        $('#input-genre').val(mode === 'edit' ? (book.genre || '') : '');
         $('#input-desc').val(mode === 'edit' ? book.description : '');
         $('#input-price').val(mode === 'edit' ? book.price : '');
         $('#input-image').val('');
@@ -131,9 +143,11 @@ $(document).ready(function () {
 
     /* Save */
     $('#modal-save').on('click', function () {
-        var name  = $.trim($('#input-name').val());
-        var desc  = $.trim($('#input-desc').val());
-        var price = $.trim($('#input-price').val());
+        var name   = $.trim($('#input-name').val());
+        var author = $.trim($('#input-author').val());
+        var genre  = $.trim($('#input-genre').val());
+        var desc   = $.trim($('#input-desc').val());
+        var price  = $.trim($('#input-price').val());
 
         if (!name) { alert('Book name is required.'); return; }
 
@@ -146,6 +160,8 @@ $(document).ready(function () {
                     return {
                         id: b.id,
                         name: name,
+                        author: author,
+                        genre: genre,
                         description: desc,
                         price: price,
                         image: currentImageData || b.image
@@ -157,10 +173,19 @@ $(document).ready(function () {
             /* Update card in-place */
             var updated = books.find(function (b) { return b.id === editingId; });
             var $card = $('.book-card[data-id="' + editingId + '"]');
+            var authorGenre = '';
+            if (updated.author || updated.genre) {
+                authorGenre = '<small style="color:#888;">';
+                if (updated.author) authorGenre += 'By ' + escHtml(updated.author);
+                if (updated.author && updated.genre) authorGenre += ' • ';
+                if (updated.genre) authorGenre += escHtml(updated.genre);
+                authorGenre += '</small><br>';
+            }
             $card.find('.book-title').html(
                 escHtml(updated.name) + '<br>' +
+                authorGenre +
                 escHtml(updated.description) + '<br>' +
-                escHtml(updated.price)
+                '\u20B9' + escHtml(updated.price)
             );
             if (currentImageData) {
                 $card.find('.img-placeholder img').attr('src', currentImageData);
@@ -170,6 +195,8 @@ $(document).ready(function () {
             var newBook = {
                 id: Date.now(),
                 name: name,
+                author: author,
+                genre: genre,
                 description: desc,
                 price: price,
                 image: currentImageData || null

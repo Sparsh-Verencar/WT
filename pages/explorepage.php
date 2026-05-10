@@ -59,6 +59,8 @@ $js_books_array = [];
                     $js_books_array[] = [
                         'id' => $row['id'],
                         'name' => $row['title'],
+                        'author' => isset($row['author']) ? $row['author'] : '',
+                        'genre' => isset($row['genre']) ? $row['genre'] : '',
                         'description' => $row['description'],
                         'price' => $row['price'],
                         'image' => $row['image_path']
@@ -73,8 +75,14 @@ $js_books_array = [];
                 <div class="img-placeholder"><img src="<?= $img ?>" alt="Book-img"></div>
                 <p class="book-title">
                     <?= htmlspecialchars($row['title']) ?><br>
+                    <?php if (isset($row['author']) && $row['author']): ?>
+                        <small style="color:#888;">By <?= htmlspecialchars($row['author']) ?></small><br>
+                    <?php endif; ?>
+                    <?php if (isset($row['genre']) && $row['genre']): ?>
+                        <small style="color:#888;"><?= htmlspecialchars($row['genre']) ?></small><br>
+                    <?php endif; ?>
                     <?= htmlspecialchars($row['description']) ?><br>
-                    <?= htmlspecialchars($row['price']) ?>
+                    &#8377;<?= htmlspecialchars($row['price']) ?>
                 </p>
             </div>
             <?php endwhile; ?>

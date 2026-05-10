@@ -32,7 +32,7 @@ $tables = [
         seller_id INT NOT NULL,
         title VARCHAR(255) NOT NULL,
         author VARCHAR(255),
-        price VARCHAR(50) NOT NULL,
+        price INT NOT NULL DEFAULT 0,
         condition_desc VARCHAR(255),
         image_path VARCHAR(255),
         description TEXT,
@@ -55,6 +55,23 @@ foreach ($tables as $table) {
     $conn->query($table);
 }
 
+// Migrate price column from VARCHAR to INT if needed
+$col_check = $conn->query("SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '$dbname' AND TABLE_NAME = 'books' AND COLUMN_NAME = 'price'");
+if ($col_check && $col_row = $col_check->fetch_assoc()) {
+    if (strtolower($col_row['DATA_TYPE']) === 'varchar') {
+        // Strip non-numeric characters using PHP (compatible with all MySQL versions)
+        $rows = $conn->query("SELECT id, price FROM books");
+        if ($rows) {
+            while ($r = $rows->fetch_assoc()) {
+                $clean = intval(preg_replace('/[^0-9]/', '', $r['price']));
+                $conn->query("UPDATE books SET price = '$clean' WHERE id = " . intval($r['id']));
+            }
+        }
+        $conn->query("ALTER TABLE books MODIFY COLUMN price INT NOT NULL DEFAULT 0");
+    }
+}
+
 // Add columns to existing tables
+$conn->query("ALTER TABLE books ADD COLUMN IF NOT EXISTS genre VARCHAR(100)");
 $conn->query("ALTER TABLE books ADD COLUMN IF NOT EXISTS status ENUM('available', 'sold') DEFAULT 'available'");
 ?>

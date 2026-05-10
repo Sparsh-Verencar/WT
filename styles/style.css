@@ -5,7 +5,8 @@
 }
 
 body {
-    font-family: 'Comic Sans MS', 'Arial Black', 'Impact', sans-serif;
+    /* Prefer fonts that include the Indian Rupee glyph for broader compatibility */
+    font-family: 'Segoe UI Symbol', 'Noto Sans', 'Roboto', 'Comic Sans MS', 'Arial Black', 'Impact', sans-serif;
 }
 
 #nav {

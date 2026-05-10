@@ -30,8 +30,10 @@ if (isset($_GET['edit'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     if ($_POST['action'] === 'add_book') {
         $title = trim($_POST['title']);
+        $author = trim($_POST['author']);
+        $genre = trim($_POST['genre']);
         $desc = trim($_POST['description']);
-        $price = trim($_POST['price']);
+        $price = intval($_POST['price']);
         $seller_id = $_SESSION['user_id'];
         
         $image_path = '';
@@ -45,8 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             }
         }
         
-        $stmt = $conn->prepare("INSERT INTO books (seller_id, title, description, price, image_path) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param("issss", $seller_id, $title, $desc, $price, $image_path);
+        $stmt = $conn->prepare("INSERT INTO books (seller_id, title, author, genre, description, price, image_path) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("issssisi", $seller_id, $title, $author, $genre, $desc, $price, $image_path);
         if ($stmt->execute()) {
             $new_id = $stmt->insert_id;
             $success = "Book added successfully.";
@@ -55,6 +57,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 echo json_encode(['success' => true, 'book' => [
                     'id' => $new_id,
                     'title' => $title,
+                    'author' => $author,
+                    'genre' => $genre,
                     'description' => $desc,
                     'price' => $price,
                     'image_path' => $image_path
@@ -73,27 +77,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     } elseif ($_POST['action'] === 'delete_book') {
         $book_id = $_POST['book_id'] ?? 0;
         $seller_id = $_SESSION['user_id'];
-        $stmt = $conn->prepare("DELETE FROM books WHERE id = ? AND seller_id = ?");
-        $stmt->bind_param("ii", $book_id, $seller_id);
-        if ($stmt->execute()) {
+        // Do not allow deleting a book that has been sold
+        $check = $conn->prepare("SELECT status FROM books WHERE id = ? AND seller_id = ?");
+        $check->bind_param("ii", $book_id, $seller_id);
+        $check->execute();
+        $res_check = $check->get_result();
+        if ($res_check->num_rows === 0) {
             if ($is_ajax) {
                 header('Content-Type: application/json');
-                echo json_encode(['success' => true, 'book_id' => $book_id]);
-                exit;
-            }
-        } else {
-            if ($is_ajax) {
-                header('Content-Type: application/json');
-                echo json_encode(['success' => false, 'message' => 'Failed to delete']);
+                echo json_encode(['success' => false, 'message' => 'Book not found']);
                 exit;
             }
         }
-        $stmt->close();
+        $row_check = $res_check->fetch_assoc();
+        if (isset($row_check['status']) && $row_check['status'] === 'sold') {
+            if ($is_ajax) {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'Cannot delete a sold book']);
+                exit;
+            } else {
+                $error = 'Cannot delete a sold book';
+            }
+        } else {
+            $stmt = $conn->prepare("DELETE FROM books WHERE id = ? AND seller_id = ?");
+            $stmt->bind_param("ii", $book_id, $seller_id);
+            if ($stmt->execute()) {
+                if ($is_ajax) {
+                    header('Content-Type: application/json');
+                    echo json_encode(['success' => true, 'book_id' => $book_id]);
+                    exit;
+                }
+            } else {
+                if ($is_ajax) {
+                    header('Content-Type: application/json');
+                    echo json_encode(['success' => false, 'message' => 'Failed to delete']);
+                    exit;
+                }
+            }
+            $stmt->close();
+        }
+        $check->close();
     } elseif ($_POST['action'] === 'edit_book') {
         $book_id = intval($_POST['book_id'] ?? 0);
         $title = trim($_POST['title']);
+        $author = trim($_POST['author']);
+        $genre = trim($_POST['genre']);
         $desc = trim($_POST['description']);
-        $price = trim($_POST['price']);
+        $price = intval($_POST['price']);
         $seller_id = $_SESSION['user_id'];
         
         $image_path = null;
@@ -108,11 +138,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         }
         
         if ($image_path !== null) {
-            $stmt = $conn->prepare("UPDATE books SET title = ?, description = ?, price = ?, image_path = ? WHERE id = ? AND seller_id = ?");
-            $stmt->bind_param("ssssii", $title, $desc, $price, $image_path, $book_id, $seller_id);
+            $stmt = $conn->prepare("UPDATE books SET title = ?, author = ?, genre = ?, description = ?, price = ?, image_path = ? WHERE id = ? AND seller_id = ?");
+            $stmt->bind_param("ssssisii", $title, $author, $genre, $desc, $price, $image_path, $book_id, $seller_id);
         } else {
-            $stmt = $conn->prepare("UPDATE books SET title = ?, description = ?, price = ? WHERE id = ? AND seller_id = ?");
-            $stmt->bind_param("sssii", $title, $desc, $price, $book_id, $seller_id);
+            $stmt = $conn->prepare("UPDATE books SET title = ?, author = ?, genre = ?, description = ?, price = ? WHERE id = ? AND seller_id = ?");
+            $stmt->bind_param("sssssii", $title, $author, $genre, $desc, $price, $book_id, $seller_id);
         }
         
         if ($stmt->execute()) {
@@ -122,6 +152,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 echo json_encode(['success' => true, 'book' => [
                     'id' => $book_id,
                     'title' => $title,
+                    'author' => $author,
+                    'genre' => $genre,
                     'description' => $desc,
                     'price' => $price,
                     'image_path' => $image_path !== null ? $image_path : ''
@@ -159,6 +191,8 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == '1') {
         $books[] = [
             'id' => $r['id'],
             'title' => $r['title'],
+            'author' => isset($r['author']) ? $r['author'] : '',
+            'genre' => isset($r['genre']) ? $r['genre'] : '',
             'description' => $r['description'],
             'price' => $r['price'],
             'image_path' => $r['image_path'] ?: '../images/1984.png',
@@ -171,10 +205,17 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == '1') {
 }
 
 $seller_id = $_SESSION['user_id'];
-$stmt = $conn->prepare("SELECT * FROM books WHERE seller_id = ? ORDER BY created_at DESC");
-$stmt->bind_param("i", $seller_id);
-$stmt->execute();
-$result = $stmt->get_result();
+// Available (not sold) books for the main grid
+$avail_stmt = $conn->prepare("SELECT * FROM books WHERE seller_id = ? AND (status IS NULL OR status != 'sold') ORDER BY created_at DESC");
+$avail_stmt->bind_param("i", $seller_id);
+$avail_stmt->execute();
+$avail_result = $avail_stmt->get_result();
+
+// Sold books (purchases) with buyer info
+$sold_stmt = $conn->prepare("SELECT b.*, o.buyer_id, o.order_date, u.username AS buyer_name FROM books b LEFT JOIN orders o ON b.id = o.book_id LEFT JOIN users u ON o.buyer_id = u.id WHERE b.seller_id = ? AND b.status = 'sold' ORDER BY o.order_date DESC");
+$sold_stmt->bind_param("i", $seller_id);
+$sold_stmt->execute();
+$sold_result = $sold_stmt->get_result();
 
 $js_books_array = [];
 ?>
@@ -212,17 +253,40 @@ $js_books_array = [];
             <p style="color: green; font-weight: 900; margin: 10px;"><?= htmlspecialchars($success) ?></p>
         <?php endif; ?>
 
+        <?php if ($sold_result && $sold_result->num_rows > 0): ?>
+            <section style="margin: 20px 0;">
+                <h3 style="margin:0 0 10px 0;">Purchases</h3>
+                <div class="purchases-list" style="display:flex;gap:10px;flex-wrap:wrap;">
+                    <?php while ($srow = $sold_result->fetch_assoc()): ?>
+                        <?php $simg = !empty($srow['image_path']) ? htmlspecialchars($srow['image_path']) : '../images/1984.png'; ?>
+                        <div class="purchase-card" style="border:1px solid #eee;padding:10px;border-radius:6px;width:220px;">
+                            <div style="display:flex;gap:10px;align-items:center;">
+                                <img src="<?= $simg ?>" alt="Book" style="width:60px;height:80px;object-fit:cover;border-radius:4px;">
+                                <div>
+                                    <strong><?= htmlspecialchars($srow['title']) ?></strong>
+                                    <div style="font-size:13px;color:#666;">Buyer: <?= htmlspecialchars($srow['buyer_name'] ?? '—') ?></div>
+                                    <div style="font-size:13px;color:#666;">&#8377;<?= htmlspecialchars($srow['price']) ?> • <?= isset($srow['order_date']) ? htmlspecialchars($srow['order_date']) : '' ?></div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endwhile; ?>
+                </div>
+            </section>
+        <?php endif; ?>
+
         <div class="book-grid">
             <div class="add-card">
                 <p>+</p>
             </div>
             
             <?php 
-                while ($row = $result->fetch_assoc()): 
+                while ($row = $avail_result->fetch_assoc()): 
                     $img = !empty($row['image_path']) ? htmlspecialchars($row['image_path']) : '../images/1984.png';
                     $js_books_array[] = [
                         'id' => $row['id'],
                         'name' => $row['title'],
+                        'author' => isset($row['author']) ? $row['author'] : '',
+                        'genre' => isset($row['genre']) ? $row['genre'] : '',
                         'description' => $row['description'],
                         'price' => $row['price'],
                         'image' => $row['image_path']
@@ -245,7 +309,7 @@ $js_books_array = [];
                 <p class="book-title">
                     <?= htmlspecialchars($row['title']) ?><br>
                     <?= htmlspecialchars($row['description']) ?><br>
-                    <?= htmlspecialchars($row['price']) ?>
+                    &#8377;<?= htmlspecialchars($row['price']) ?>
                 </p>
             </div>
             <?php endwhile; ?>
@@ -263,16 +327,24 @@ $js_books_array = [];
             <h3 id="modal-title"><?= $edit_mode ? 'Update Book' : 'Add Book' ?></h3>
 
             <div class="form-group">
-                <label for="input-name">Book Name</label>
+                <label for="input-name">Book Title</label>
                 <input type="text" id="input-name" name="title" placeholder="e.g. 1984" required value="<?= $edit_mode ? htmlspecialchars($edit_book['title']) : '' ?>">
             </div>
             <div class="form-group">
-                <label for="input-desc">Description</label>
-                <textarea id="input-desc" name="description" placeholder="Short description…"><?= $edit_mode ? htmlspecialchars($edit_book['description']) : '' ?></textarea>
+                <label for="input-author">Author</label>
+                <input type="text" id="input-author" name="author" placeholder="e.g. George Orwell" value="<?= $edit_mode ? htmlspecialchars($edit_book['author'] ?? '') : '' ?>">
             </div>
             <div class="form-group">
-                <label for="input-price">Price</label>
-                <input type="text" id="input-price" name="price" placeholder="e.g. $9.99" required value="<?= $edit_mode ? htmlspecialchars($edit_book['price']) : '' ?>">
+                <label for="input-genre">Genre</label>
+                <input type="text" id="input-genre" name="genre" placeholder="e.g. Fiction, Mystery, Science" value="<?= $edit_mode ? htmlspecialchars($edit_book['genre'] ?? '') : '' ?>">
+            </div>
+            <div class="form-group">
+                <label for="input-desc">Description</label>
+                <textarea id="input-desc" name="description" placeholder="Short description of the book…"><?= $edit_mode ? htmlspecialchars($edit_book['description']) : '' ?></textarea>
+            </div>
+            <div class="form-group">
+                <label for="input-price">Price (&#8377;)</label>
+                <input type="number" id="input-price" name="price" placeholder="&#8377; e.g. 299" min="0" step="1" required value="<?= $edit_mode ? htmlspecialchars($edit_book['price']) : '' ?>">
             </div>
             <div class="form-group">
                 <label for="input-image">Book Image</label>

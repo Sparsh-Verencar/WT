@@ -15,13 +15,23 @@ $(document).ready(function () {
             ? '<img src="' + book.image + '" alt="Book-img">'
             : '<img src="../images/1984.png" alt="Book-img">';
 
+        var authorGenre = '';
+        if (book.author || book.genre) {
+            authorGenre = '<small style="color:#888;">';
+            if (book.author) authorGenre += 'By ' + escHtml(book.author);
+            if (book.author && book.genre) authorGenre += ' • ';
+            if (book.genre) authorGenre += escHtml(book.genre);
+            authorGenre += '</small><br>';
+        }
+
         return $(
             '<div class="book-card" data-id="' + book.id + '">' +
                 '<div class="img-placeholder">' + imgTag + '</div>' +
                 '<p class="book-title">' +
                     escHtml(book.name) + '<br>' +
+                    authorGenre +
                     escHtml(book.description) + '<br>' +
-                    escHtml(book.price) +
+                    '\u20B9' + escHtml(book.price) +
                 '</p>' +
             '</div>'
         );

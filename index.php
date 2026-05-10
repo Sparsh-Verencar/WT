@@ -29,6 +29,9 @@ $is_logged_in = isset($_SESSION['user_id']);
                 <a href="pages/createAccount.php">
                     <button>Create Account</button>
                 </a>
+                <a href="pages/adminlogin.php">
+                    <button>Admin Login</button>
+                </a>
             <?php endif; ?>
         </div>
     </nav>

@@ -115,10 +115,12 @@ body::before {
 #content {
     width: 100%;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
     color: #FFD700;
     padding: 2rem;
+    overflow-y: auto;
+    gap: 2rem;
 }
 
 /* ── ACCOUNT CARD ────────────────────────────── */
@@ -137,6 +139,7 @@ body::before {
         14px 14px 0 #FB5607,
         0 24px 50px rgba(0, 0, 0, 0.6);
     transition: all 0.2s ease;
+    flex-shrink: 0;
 }
 
 #account-card:hover {
@@ -292,4 +295,166 @@ body::before {
     background: linear-gradient(135deg, #FF006E, #c9003e);
     color: #FFFF00;
     border-color: #1a1a2e;
+}
+
+/* ── USER BOOKS SECTION ─────────────────────── */
+#user-books {
+    width: 100%;
+}
+
+.section-title {
+    margin-bottom: 15px;
+    color: #FB5607;
+    text-transform: uppercase;
+    font-family: 'Arial Black', sans-serif;
+    font-size: 1.2rem;
+    text-shadow: 2px 2px 0 #1a1a2e;
+}
+
+.empty-state {
+    font-size: 0.9rem;
+    color: #fff;
+    font-family: 'Comic Sans MS', sans-serif;
+}
+
+/* ── BOOK GRID ──────────────────────────────── */
+.book-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.75rem;
+    padding-right: 0.5rem;
+}
+
+/* ── BOOK CARD ──────────────────────────────── */
+.book-card {
+    background: #16213e;
+    border: 4px solid #1a1a2e;
+    border-radius: 10px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1rem;
+    min-height: 300px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.15s ease;
+    overflow: hidden;
+    box-shadow: 5px 5px 0 #FF006E, 9px 9px 0 #FB5607;
+}
+
+.book-card:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 8px 8px 0 #FF006E, 13px 13px 0 #FB5607, 0 20px 30px rgba(255,107,53,0.3);
+    border-color: #FFD700;
+}
+
+/* ── IMG PLACEHOLDER ────────────────────────── */
+.img-placeholder {
+    width: 100%;
+    height: 200px;
+    background-color: #0f172a;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 3px solid #1a1a2e;
+}
+
+.img-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.2s ease;
+}
+
+.book-card:hover .img-placeholder img {
+    transform: scale(1.06);
+}
+
+/* ── BOOK TITLE ─────────────────────────────── */
+.book-card p {
+    font-size: 0.85rem;
+    color: #FFFF00;
+    text-align: center;
+    line-height: 1.4;
+    word-break: break-word;
+    font-weight: 900;
+    font-family: 'Arial Black', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    text-shadow: 1px 1px 0 #1a1a2e;
+}
+
+.book-price {
+    font-size: 0.85rem;
+    color: #FFD700;
+    font-weight: 700;
+}
+
+/* ── CARD BUTTONS ───────────────────────────── */
+.buttons {
+    display: flex;
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    gap: 0.5rem;
+    z-index: 10;
+}
+
+.sold-badge {
+    background: red;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 12px;
+    display: inline-block;
+    font-family: 'Arial Black', sans-serif;
+}
+
+.edit-btn {
+    cursor: pointer;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #1a1a2e;
+    padding: 0.45rem 0.875rem;
+    border-radius: 6px;
+    border: 3px solid #1a1a2e;
+    font-size: 0.8rem;
+    font-weight: 900;
+    font-family: 'Arial Black', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    box-shadow: 0 3px 0 #1a1a2e;
+    transition: all 0.15s ease;
+    z-index: 10;
+}
+
+.edit-btn:hover {
+    background: linear-gradient(135deg, #FFA500, #FFD700);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 0 #1a1a2e, 0 8px 14px rgba(255,215,0,0.3);
+}
+
+/* ── SCROLLBAR ──────────────────────────────── */
+#content::-webkit-scrollbar {
+    width: 8px;
+}
+
+#content::-webkit-scrollbar-track {
+    background: #1a1a2e;
+}
+
+#content::-webkit-scrollbar-thumb {
+    background: linear-gradient(#FFD700, #FFA500);
+    border-radius: 4px;
+    border: 2px solid #1a1a2e;
+}
+
+#content::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(#FFA500, #FF006E);
 }
