@@ -25,6 +25,26 @@ $stmt_b = $conn->prepare("SELECT id, title, author, genre, price, status, image_
 $stmt_b->bind_param("i", $user_id);
 $stmt_b->execute();
 $books_res = $stmt_b->get_result();
+
+// Fetch sold books with order and buyer information
+$stmt_sold = $conn->prepare("
+    SELECT 
+        b.id,
+        b.title,
+        b.price,
+        u.username AS buyer_name,
+        o.order_date,
+        o.commission_amount,
+        o.seller_payout
+    FROM books b
+    JOIN orders o ON b.id = o.book_id
+    JOIN users u ON o.buyer_id = u.id
+    WHERE b.seller_id = ?
+    ORDER BY o.order_date DESC
+");
+$stmt_sold->bind_param("i", $user_id);
+$stmt_sold->execute();
+$sold_books_res = $stmt_sold->get_result();
 ?>
 <!DOCTYPE html>
 <html lang="en">
